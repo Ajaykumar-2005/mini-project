@@ -643,6 +643,8 @@ body {
 .card-demand .card-icon { color: var(--warning); }
 .card-runoff .card-icon { color: var(--accent); }
 .card-surplus .card-icon { color: var(--success); }
+.card-environment .card-icon { color: #27ae60; }
+.card-environment::before { background: linear-gradient(90deg, #27ae60, #2ecc71); }
 
 .result-card h4 {
     font-size: 0.85rem;

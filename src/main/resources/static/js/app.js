@@ -198,6 +198,8 @@ function submitForm() {
     .then(result => {
         console.log('Assessment result:', result);
         
+        lastAssessmentResult = result;
+        
         if (loadingOverlay) {
             loadingOverlay.classList.add('hidden');
         }
@@ -238,6 +240,12 @@ function displayResults(result) {
     setResultValue('result-demand', result.waterDemand, 2);
     setResultValue('result-runoff', result.runoffGeneration, 2);
     setResultValue('result-surplus', result.surplusWater, 2);
+    
+    if (result.environmentalImpact && result.environmentalImpact.co2Reduction) {
+        setResultValue('result-co2', result.environmentalImpact.co2Reduction, 2);
+    } else {
+        setResultValue('result-co2', 0, 2);
+    }
 
     const badge = document.getElementById('feasibility-badge');
     if (badge) {
@@ -356,6 +364,76 @@ function resetForm() {
     if (formSection) {
         formSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
+}
+
+let lastAssessmentResult = null;
+
+function generatePdf() {
+    if (!lastAssessmentResult) {
+        alert('No assessment data available');
+        return;
+    }
+
+    const inputData = {
+        name: 'User',
+        state: document.getElementById('state').value,
+        district: document.getElementById('district').value,
+        locationType: document.querySelector('input[name="locationType"]:checked')?.value || 'urban',
+        areaType: document.querySelector('input[name="areaType"]:checked')?.value || 'town',
+        numberOfDwellers: parseInt(document.getElementById('numberOfDwellers').value) || 4,
+        roofArea: parseFloat(document.getElementById('roofArea').value) || 100,
+        roofType: document.getElementById('roofType').value,
+        openSpace: parseFloat(document.getElementById('openSpace').value) || 20,
+        soilType: document.getElementById('soilType').value,
+        isFeasible: lastAssessmentResult.isFeasible,
+        recommendedStructure: lastAssessmentResult.recommendedStructure,
+        runoffGenerated: lastAssessmentResult.runoffGenerated,
+        waterDemand: lastAssessmentResult.waterDemand,
+        surplusWater: lastAssessmentResult.surplusWater,
+        annualRainfall: lastAssessmentResult.annualRainfall,
+        message: lastAssessmentResult.message,
+        dimType: lastAssessmentResult.dimensions?.type || '',
+        dimLength: lastAssessmentResult.dimensions?.length || 0,
+        dimWidth: lastAssessmentResult.dimensions?.width || 0,
+        dimDepth: lastAssessmentResult.dimensions?.depth || 0,
+        dimCapacity: lastAssessmentResult.dimensions?.capacity || 0,
+        structureCost: lastAssessmentResult.costEstimation?.structureCost || 0,
+        plumbingCost: lastAssessmentResult.costEstimation?.plumbingCost || 0,
+        filtrationCost: lastAssessmentResult.costEstimation?.filtrationCost || 0,
+        totalCost: lastAssessmentResult.costEstimation?.totalCost || 0,
+        paybackPeriod: lastAssessmentResult.costEstimation?.paybackPeriod || 0,
+        waterSaved20Years: lastAssessmentResult.environmentalImpact?.waterSaved20Years || 0,
+        co2Reduction: lastAssessmentResult.environmentalImpact?.co2Reduction || 0,
+        costSavings20Years: lastAssessmentResult.environmentalImpact?.costSavings20Years || 0,
+        aquiferType: lastAssessmentResult.aquiferData?.aquiferType || '',
+        groundwaterLevel: lastAssessmentResult.aquiferData?.groundwaterLevel || 0,
+        runoffCoefficient: lastAssessmentResult.aquiferData?.runoffCoefficient || 0,
+        aquiferSoilType: lastAssessmentResult.aquiferData?.soilType || ''
+    };
+
+    fetch('/api/generate-pdf', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(inputData)
+    })
+    .then(response => {
+        if (!response.ok) throw new Error('PDF generation failed');
+        return response.blob();
+    })
+    .then(blob => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'JalDhara_Assessment_Report.pdf';
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+    })
+    .catch(err => {
+        console.error('Error generating PDF:', err);
+        alert('Error generating PDF. Please try again.');
+    });
 }
 
 document.addEventListener('DOMContentLoaded', function() {

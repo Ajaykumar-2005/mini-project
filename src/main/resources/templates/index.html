@@ -293,6 +293,12 @@
                     <div class="result-value" id="result-surplus">--</div>
                     <div class="result-unit">KL/year</div>
                 </div>
+                <div class="result-card card-environment">
+                    <div class="card-icon"><i class="fas fa-leaf"></i></div>
+                    <h4>CO₂ Reduction</h4>
+                    <div class="result-value" id="result-co2">--</div>
+                    <div class="result-unit">kg/year</div>
+                </div>
             </div>
 
             <div class="results-details">
@@ -399,8 +405,8 @@
             <div class="results-message" id="feasibility-message"></div>
 
             <div class="results-actions">
-                <button class="btn btn-primary" onclick="window.print()">
-                    <i class="fas fa-print"></i> Print Report
+                <button class="btn btn-primary" onclick="generatePdf()">
+                    <i class="fas fa-file-pdf"></i> Download PDF Report
                 </button>
                 <button class="btn btn-secondary" onclick="resetForm()">
                     <i class="fas fa-redo"></i> New Assessment
