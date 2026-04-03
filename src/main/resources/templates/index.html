@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JalDhara - Rainwater Harvesting Assessment</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="background-animation">
+        <div class="water-drop drop1"></div>
+        <div class="water-drop drop2"></div>
+        <div class="water-drop drop3"></div>
+    </div>
+
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-water"></i>
+                <h1>JalDhara</h1>
+            </div>
+            <p class="tagline">Smart Rainwater Harvesting Assessment Tool</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <div class="hero-content">
+                <h2>Assess Your Rainwater Harvesting Potential</h2>
+                <p>Get personalized recommendations for Rooftop Rainwater Harvesting and Artificial Recharge structures based on your location, roof area, and soil conditions.</p>
+                <button class="btn btn-primary btn-lg" onclick="scrollToForm()">
+                    <i class="fas fa-search-location"></i> Start Assessment
+                </button>
+            </div>
+            <div class="hero-illustration">
+                <div class="water-cycle">
+                    <div class="cloud"><i class="fas fa-cloud-rain"></i></div>
+                    <div class="roof"><i class="fas fa-home"></i></div>
+                    <div class="tank"><i class="fas fa-tint"></i></div>
+                    <div class="ground"><i class="fas fa-mountain"></i></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="features">
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-check-circle"></i></div>
+                <h3>Feasibility Check</h3>
+                <p>Instant assessment of rainwater harvesting feasibility at your location</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-ruler-combined"></i></div>
+                <h3>Structure Design</h3>
+                <p>Recommended dimensions for pits, trenches, and shafts</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-coins"></i></div>
+                <h3>Cost Analysis</h3>
+                <p>Detailed cost estimation with payback period calculation</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-leaf"></i></div>
+                <h3>Impact Assessment</h3>
+                <p>Environmental benefits and water savings projection</p>
+            </div>
+        </section>
+
+        <section id="assessment-form" class="assessment-section">
+            <div class="form-container">
+                <div class="progress-bar">
+                    <div class="progress-step active" data-step="1">
+                        <div class="step-circle">1</div>
+                        <span>Personal Info</span>
+                    </div>
+                    <div class="progress-line"></div>
+                    <div class="progress-step" data-step="2">
+                        <div class="step-circle">2</div>
+                        <span>Location</span>
+                    </div>
+                    <div class="progress-line"></div>
+                    <div class="progress-step" data-step="3">
+                        <div class="step-circle">3</div>
+                        <span>Property</span>
+                    </div>
+                    <div class="progress-line"></div>
+                    <div class="progress-step" data-step="4">
+                        <div class="step-circle">4</div>
+                        <span>Results</span>
+                    </div>
+                </div>
+
+                <form id="harvestForm">
+                    <div class="form-step active" id="step1">
+                        <div class="step-header">
+                            <i class="fas fa-user-circle"></i>
+                            <h3>Personal Information</h3>
+                            <p>Tell us about yourself</p>
+                        </div>
+                        <div class="form-group">
+                            <label for="name"><i class="fas fa-user"></i> Full Name</label>
+                            <input type="text" id="name" name="name" placeholder="Enter your name" required>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-next" onclick="nextStep(2)">
+                                Next <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-step" id="step2">
+                        <div class="step-header">
+                            <i class="fas fa-map-marked-alt"></i>
+                            <h3>Location Details</h3>
+                            <p>Select your state and district</p>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="state"><i class="fas fa-map"></i> State</label>
+                                <select id="state" name="state" required onchange="loadDistricts()">
+                                    <option value="">Select State</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="district"><i class="fas fa-city"></i> District</label>
+                                <select id="district" name="district" required>
+                                    <option value="">Select District</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="locationType"><i class="fas fa-location-arrow"></i> Location Type</label>
+                            <div class="radio-group">
+                                <label class="radio-card">
+                                    <input type="radio" name="locationType" value="urban" checked>
+                                    <div class="radio-content">
+                                        <i class="fas fa-city"></i>
+                                        <span>Urban</span>
+                                    </div>
+                                </label>
+                                <label class="radio-card">
+                                    <input type="radio" name="locationType" value="semi-urban">
+                                    <div class="radio-content">
+                                        <i class="fas fa-building"></i>
+                                        <span>Semi-Urban</span>
+                                    </div>
+                                </label>
+                                <label class="radio-card">
+                                    <input type="radio" name="locationType" value="rural">
+                                    <div class="radio-content">
+                                        <i class="fas fa-tree"></i>
+                                        <span>Rural</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-prev" onclick="prevStep(1)">
+                                <i class="fas fa-arrow-left"></i> Back
+                            </button>
+                            <button type="button" class="btn btn-next" onclick="nextStep(3)">
+                                Next <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-step" id="step3">
+                        <div class="step-header">
+                            <i class="fas fa-home"></i>
+                            <h3>Property Details</h3>
+                            <p>Provide your property specifications</p>
+                        </div>
+                        <div class="form-group">
+                            <label for="numberOfDwellers"><i class="fas fa-users"></i> Number of Dwellers</label>
+                            <input type="number" id="numberOfDwellers" name="numberOfDwellers" min="1" max="100" placeholder="e.g., 4" required>
+                            <small>Used to calculate water demand (135 LPCD standard)</small>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="roofArea"><i class="fas fa-vector-square"></i> Roof Area (sq. meters)</label>
+                                <input type="number" id="roofArea" name="roofArea" min="10" max="10000" step="0.1" placeholder="e.g., 100" required>
+                                <div class="range-slider">
+                                    <input type="range" min="10" max="500" value="100" oninput="document.getElementById('roofArea').value = this.value">
+                                    <div class="range-labels">
+                                        <span>10 m²</span>
+                                        <span>500 m²</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="openSpace"><i class="fas fa-expand"></i> Open Space (sq. meters)</label>
+                                <input type="number" id="openSpace" name="openSpace" min="0" step="0.1" placeholder="e.g., 50" required>
+                                <small>Available ground area for recharge structures</small>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="roofType"><i class="fas fa-layer-group"></i> Roof Type</label>
+                                <select id="roofType" name="roofType" required>
+                                    <option value="">Select Roof Type</option>
+                                    <option value="concrete">Concrete/RCC (Runoff: 85%)</option>
+                                    <option value="tile">Clay Tile (Runoff: 75%)</option>
+                                    <option value="metal">Metal Sheet (Runoff: 90%)</option>
+                                    <option value="asbestos">Asbestos (Runoff: 80%)</option>
+                                    <option value="thatched">Thatched (Runoff: 30%)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="soilType"><i class="fas fa-mountain"></i> Soil Type</label>
+                                <select id="soilType" name="soilType" required>
+                                    <option value="">Select Soil Type</option>
+                                    <option value="sandy">Sandy Soil</option>
+                                    <option value="alluvial">Alluvial Soil</option>
+                                    <option value="laterite">Laterite Soil</option>
+                                    <option value="black cotton">Black Cotton Soil</option>
+                                    <option value="red sandy">Red Sandy Soil</option>
+                                    <option value="clay">Clay Soil</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-prev" onclick="prevStep(2)">
+                                <i class="fas fa-arrow-left"></i> Back
+                            </button>
+                            <button type="button" class="btn btn-submit" onclick="submitForm()">
+                                <i class="fas fa-calculator"></i> Calculate Assessment
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <section id="results-section" class="results-section hidden">
+            <div class="results-header">
+                <h2><i class="fas fa-chart-bar"></i> Assessment Results</h2>
+                <div id="feasibility-badge" class="badge"></div>
+            </div>
+
+            <div class="results-grid">
+                <div class="result-card card-water">
+                    <div class="card-icon"><i class="fas fa-tint"></i></div>
+                    <h4>Annual Rainfall</h4>
+                    <div class="result-value" id="result-rainfall">--</div>
+                    <div class="result-unit">mm/year</div>
+                </div>
+                <div class="result-card card-demand">
+                    <div class="card-icon"><i class="fas fa-faucet"></i></div>
+                    <h4>Water Demand</h4>
+                    <div class="result-value" id="result-demand">--</div>
+                    <div class="result-unit">KL/year</div>
+                </div>
+                <div class="result-card card-runoff">
+                    <div class="card-icon"><i class="fas fa-cloud-showers-heavy"></i></div>
+                    <h4>Runoff Generated</h4>
+                    <div class="result-value" id="result-runoff">--</div>
+                    <div class="result-unit">KL/year</div>
+                </div>
+                <div class="result-card card-surplus">
+                    <div class="card-icon"><i class="fas fa-battery-full"></i></div>
+                    <h4>Surplus Water</h4>
+                    <div class="result-value" id="result-surplus">--</div>
+                    <div class="result-unit">KL/year</div>
+                </div>
+            </div>
+
+            <div class="results-details">
+                <div class="detail-section">
+                    <h3><i class="fas fa-water"></i> Aquifer Information</h3>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="info-label">Aquifer Type</span>
+                            <span class="info-value" id="aquifer-type">--</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Groundwater Level</span>
+                            <span class="info-value" id="groundwater-level">--</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-section structure-section">
+                    <h3><i class="fas fa-hard-hat"></i> Recommended Structure</h3>
+                    <div class="structure-card">
+                        <div class="structure-icon">
+                            <i class="fas fa-drafting-compass"></i>
+                        </div>
+                        <div class="structure-info">
+                            <h4 id="structure-name">--</h4>
+                            <p id="structure-desc">--</p>
+                        </div>
+                    </div>
+                    <div class="dimensions-grid">
+                        <div class="dimension-item">
+                            <i class="fas fa-ruler"></i>
+                            <span>Type</span>
+                            <strong id="dim-type">--</strong>
+                        </div>
+                        <div class="dimension-item">
+                            <i class="fas fa-ruler-horizontal"></i>
+                            <span>Length</span>
+                            <strong id="dim-length">--</strong>
+                        </div>
+                        <div class="dimension-item">
+                            <i class="fas fa-ruler-vertical"></i>
+                            <span>Width</span>
+                            <strong id="dim-width">--</strong>
+                        </div>
+                        <div class="dimension-item">
+                            <i class="fas fa-arrows-alt-v"></i>
+                            <span>Depth</span>
+                            <strong id="dim-depth">--</strong>
+                        </div>
+                        <div class="dimension-item">
+                            <i class="fas fa-box"></i>
+                            <span>Capacity</span>
+                            <strong id="dim-capacity">--</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-section cost-section">
+                    <h3><i class="fas fa-rupee-sign"></i> Cost Estimation</h3>
+                    <div class="cost-breakdown">
+                        <div class="cost-row">
+                            <span>Structure Cost</span>
+                            <span id="cost-structure">--</span>
+                        </div>
+                        <div class="cost-row">
+                            <span>Plumbing & Piping</span>
+                            <span id="cost-plumbing">--</span>
+                        </div>
+                        <div class="cost-row">
+                            <span>Filtration System</span>
+                            <span id="cost-filtration">--</span>
+                        </div>
+                        <div class="cost-row total">
+                            <span>Total Investment</span>
+                            <span id="cost-total">--</span>
+                        </div>
+                    </div>
+                    <div class="cost-analysis">
+                        <div class="analysis-item">
+                            <div class="analysis-icon"><i class="fas fa-sync-alt"></i></div>
+                            <div class="analysis-info">
+                                <span>Payback Period</span>
+                                <strong id="payback-period">--</strong>
+                            </div>
+                        </div>
+                        <div class="analysis-item">
+                            <div class="analysis-icon"><i class="fas fa-piggy-bank"></i></div>
+                            <div class="analysis-info">
+                                <span>20-Year Savings</span>
+                                <strong id="savings-20yr">--</strong>
+                            </div>
+                        </div>
+                        <div class="analysis-item">
+                            <div class="analysis-icon"><i class="fas fa-leaf"></i></div>
+                            <div class="analysis-info">
+                                <span>CO₂ Reduction</span>
+                                <strong id="co2-reduction">--</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="results-message" id="feasibility-message"></div>
+
+            <div class="results-actions">
+                <button class="btn btn-primary" onclick="window.print()">
+                    <i class="fas fa-print"></i> Print Report
+                </button>
+                <button class="btn btn-secondary" onclick="resetForm()">
+                    <i class="fas fa-redo"></i> New Assessment
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <i class="fas fa-water"></i>
+                    <span>JalDhara</span>
+                </div>
+                <p>Developed for Groundwater Conservation and Public Awareness</p>
+                <p class="footer-note">Based on CGWB Guidelines and Scientific Parameters</p>
+            </div>
+            <div class="footer-links">
+                <a href="#">About</a>
+                <a href="#">CGWB Guidelines</a>
+                <a href="#">Contact</a>
+            </div>
+        </div>
+    </footer>
+
+    <div id="loading-overlay" class="loading-overlay hidden">
+        <div class="loading-spinner">
+            <div class="water-wave"></div>
+            <p>Calculating Assessment...</p>
+        </div>
+    </div>
+
+    <script src="/js/app.js"></script>
+</body>
+</html>
