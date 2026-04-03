@@ -1,6 +1,8 @@
 package com.waterharvest.service;
 
+import com.waterharvest.entity.AssessmentHistory;
 import com.waterharvest.model.*;
+import com.waterharvest.repository.AssessmentHistoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,6 +11,9 @@ public class AssessmentService {
 
     @Autowired
     private AquiferDataService aquiferDataService;
+
+    @Autowired
+    private AssessmentHistoryRepository historyRepository;
 
     public AssessmentResult assess(UserInput input) {
         System.out.println("Processing assessment for: " + input.getName() + ", State: " + input.getState());
@@ -50,13 +55,46 @@ public class AssessmentService {
         }
 
         double openSpace = input.getOpenSpace() != null ? input.getOpenSpace() : 20.0;
-        recommendStructure(result, openSpace, runoff, aquiferData);
+        recommendStructure(result, openSpace, runoff, aquiferData, input);
 
         result.setEnvironmentalImpact(Math.round(runoff * 0.4 * 100.0) / 100.0);
+
+        saveHistory(input, result);
 
         System.out.println("Assessment complete. Feasible: " + feasible + ", Runoff: " + runoff + " KL");
         
         return result;
+    }
+
+    private void saveHistory(UserInput input, AssessmentResult result) {
+        try {
+            AssessmentHistory history = new AssessmentHistory();
+            history.setUserName(input.getName());
+            history.setState(input.getState());
+            history.setDistrict(input.getDistrict());
+            history.setLocationType(input.getLocationType());
+            history.setNumberOfDwellers(input.getNumberOfDwellers());
+            history.setRoofArea(input.getRoofArea());
+            history.setRoofType(input.getRoofType());
+            history.setOpenSpace(input.getOpenSpace());
+            history.setSoilType(input.getSoilType());
+            history.setAnnualRainfall(result.getAnnualRainfall());
+            history.setWaterDemand(result.getWaterDemand());
+            history.setRunoffGenerated(result.getRunoffGeneration());
+            history.setSurplusWater(result.getSurplusWater());
+            history.setRecommendedStructure(result.getRecommendedStructure());
+            history.setIsFeasible(result.isFeasible());
+            
+            if (result.getCostEstimation() != null) {
+                history.setTotalCost(result.getCostEstimation().getTotalCost());
+                history.setPaybackPeriod(result.getCostEstimation().getPaybackPeriod());
+            }
+            
+            historyRepository.save(history);
+            System.out.println("Assessment saved to history");
+        } catch (Exception e) {
+            System.err.println("Failed to save history: " + e.getMessage());
+        }
     }
 
     private double getRoofRunoffCoefficient(String roofType) {
@@ -71,7 +109,7 @@ public class AssessmentService {
         }
     }
 
-    private void recommendStructure(AssessmentResult result, double openSpace, double runoff, AquiferData aquiferData) {
+    private void recommendStructure(AssessmentResult result, double openSpace, double runoff, AquiferData aquiferData, UserInput input) {
         StructureDimensions dimensions = new StructureDimensions();
         double gwl = aquiferData.getGroundwaterLevel();
         String soilType = aquiferData.getSoilType() != null ? aquiferData.getSoilType().toLowerCase() : "alluvial";
@@ -129,37 +167,50 @@ public class AssessmentService {
         }
 
         result.setDimensions(dimensions);
-        result.setCostEstimation(calculateCost(result, runoff));
+        result.setCostEstimation(calculateCost(result, runoff, input));
     }
 
-    private CostEstimation calculateCost(AssessmentResult result, double runoff) {
+    private double getAreaCostMultiplier(String areaType) {
+        if (areaType == null) return 1.0;
+        switch (areaType.toLowerCase()) {
+            case "metro": return 1.35;
+            case "tier2": return 1.15;
+            case "town": return 1.0;
+            case "village": return 0.85;
+            default: return 1.0;
+        }
+    }
+
+    private CostEstimation calculateCost(AssessmentResult result, double runoff, UserInput input) {
         CostEstimation cost = new CostEstimation();
         double baseCost = 0;
         String structureType = result.getRecommendedStructure();
+        
+        double areaMultiplier = getAreaCostMultiplier(input.getAreaType());
 
         if (structureType != null && structureType.contains("Recharge Pit")) {
             double volume = result.getDimensions().getLength() * result.getDimensions().getWidth() * result.getDimensions().getDepth();
-            baseCost = volume * 3500;
-            cost.setPlumbingCost(8000);
-            cost.setFiltrationCost(12000);
+            baseCost = volume * 3500 * areaMultiplier;
+            cost.setPlumbingCost(Math.round(8000 * areaMultiplier));
+            cost.setFiltrationCost(Math.round(12000 * areaMultiplier));
         } else if (structureType != null && structureType.contains("Trench")) {
             double volume = result.getDimensions().getLength() * result.getDimensions().getWidth() * result.getDimensions().getDepth();
-            baseCost = volume * 3000;
-            cost.setPlumbingCost(6000);
-            cost.setFiltrationCost(10000);
+            baseCost = volume * 3000 * areaMultiplier;
+            cost.setPlumbingCost(Math.round(6000 * areaMultiplier));
+            cost.setFiltrationCost(Math.round(10000 * areaMultiplier));
         } else if (structureType != null && structureType.contains("Shaft")) {
             double volume = Math.PI * Math.pow(result.getDimensions().getDiameter() / 2, 2) * result.getDimensions().getDepth();
-            baseCost = volume * 4000;
-            cost.setPlumbingCost(5000);
-            cost.setFiltrationCost(8000);
+            baseCost = volume * 4000 * areaMultiplier;
+            cost.setPlumbingCost(Math.round(5000 * areaMultiplier));
+            cost.setFiltrationCost(Math.round(8000 * areaMultiplier));
         } else if (structureType != null && structureType.contains("Storage Tank")) {
-            baseCost = result.getDimensions().getTankCapacity() * 2500;
-            cost.setPlumbingCost(10000);
-            cost.setFiltrationCost(15000);
+            baseCost = result.getDimensions().getTankCapacity() * 2500 * areaMultiplier;
+            cost.setPlumbingCost(Math.round(10000 * areaMultiplier));
+            cost.setFiltrationCost(Math.round(15000 * areaMultiplier));
         } else {
-            baseCost = 25000;
-            cost.setPlumbingCost(7000);
-            cost.setFiltrationCost(10000);
+            baseCost = 25000 * areaMultiplier;
+            cost.setPlumbingCost(Math.round(7000 * areaMultiplier));
+            cost.setFiltrationCost(Math.round(10000 * areaMultiplier));
         }
 
         cost.setStructureCost(Math.round(baseCost));

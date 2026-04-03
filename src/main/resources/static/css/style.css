@@ -563,8 +563,9 @@ body {
     z-index: 1;
 }
 
-.results-section.hidden {
-    display: none;
+.results-section.hidden,
+.hidden {
+    display: none !important;
 }
 
 .results-header {

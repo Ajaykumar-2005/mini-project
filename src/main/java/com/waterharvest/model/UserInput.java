@@ -11,6 +11,7 @@ public class UserInput {
     private String roofType;
     private Double openSpace;
     private String soilType;
+    private String areaType = "town";
     private String language = "en";
 
     public UserInput() {}
@@ -41,6 +42,9 @@ public class UserInput {
 
     public String getSoilType() { return soilType; }
     public void setSoilType(String soilType) { this.soilType = soilType; }
+
+    public String getAreaType() { return areaType; }
+    public void setAreaType(String areaType) { this.areaType = areaType; }
 
     public String getLanguage() { return language; }
     public void setLanguage(String language) { this.language = language; }

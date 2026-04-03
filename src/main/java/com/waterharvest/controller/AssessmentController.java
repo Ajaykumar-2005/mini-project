@@ -1,6 +1,8 @@
 package com.waterharvest.controller;
 
+import com.waterharvest.entity.AssessmentHistory;
 import com.waterharvest.model.*;
+import com.waterharvest.repository.AssessmentHistoryRepository;
 import com.waterharvest.service.AssessmentService;
 import com.waterharvest.service.AquiferDataService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +24,18 @@ public class AssessmentController {
     @Autowired
     private AquiferDataService aquiferDataService;
 
+    @Autowired
+    private AssessmentHistoryRepository historyRepository;
+
     @GetMapping("/")
     public String homePage(Model model) {
         model.addAttribute("states", aquiferDataService.getAvailableStates());
         return "index";
+    }
+
+    @GetMapping("/history")
+    public String historyPage() {
+        return "history";
     }
 
     @PostMapping("/assess")
@@ -65,5 +75,11 @@ public class AssessmentController {
     @ResponseBody
     public List<String> getStates() {
         return aquiferDataService.getAvailableStates();
+    }
+
+    @GetMapping("/api/history")
+    @ResponseBody
+    public List<AssessmentHistory> getHistory() {
+        return historyRepository.findAllByOrderByCreatedAtDesc();
     }
 }

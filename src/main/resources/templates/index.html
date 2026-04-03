@@ -72,7 +72,7 @@
                 <div class="progress-bar">
                     <div class="progress-step active" data-step="1">
                         <div class="step-circle">1</div>
-                        <span>Personal Info</span>
+                        <span>Area Type</span>
                     </div>
                     <div class="progress-line"></div>
                     <div class="progress-step" data-step="2">
@@ -94,13 +94,43 @@
                 <form id="harvestForm">
                     <div class="form-step active" id="step1">
                         <div class="step-header">
-                            <i class="fas fa-user-circle"></i>
-                            <h3>Personal Information</h3>
-                            <p>Tell us about yourself</p>
+                            <i class="fas fa-city"></i>
+                            <h3>Area Type</h3>
+                            <p>Select your location category</p>
                         </div>
                         <div class="form-group">
-                            <label for="name"><i class="fas fa-user"></i> Full Name</label>
-                            <input type="text" id="name" name="name" placeholder="Enter your name" required>
+                            <label for="areaType"><i class="fas fa-city"></i> Area Type</label>
+                            <div class="radio-group">
+                                <label class="radio-card">
+                                    <input type="radio" name="areaType" value="metro">
+                                    <div class="radio-content">
+                                        <i class="fas fa-building"></i>
+                                        <span>Metro City</span>
+                                    </div>
+                                </label>
+                                <label class="radio-card">
+                                    <input type="radio" name="areaType" value="tier2">
+                                    <div class="radio-content">
+                                        <i class="fas fa-city"></i>
+                                        <span>Tier-2 City</span>
+                                    </div>
+                                </label>
+                                <label class="radio-card">
+                                    <input type="radio" name="areaType" value="town" checked>
+                                    <div class="radio-content">
+                                        <i class="fas fa-hospital"></i>
+                                        <span>Town</span>
+                                    </div>
+                                </label>
+                                <label class="radio-card">
+                                    <input type="radio" name="areaType" value="village">
+                                    <div class="radio-content">
+                                        <i class="fas fa-tree"></i>
+                                        <span>Village</span>
+                                    </div>
+                                </label>
+                            </div>
+                            <small>Cost varies by location - Metro cities have higher construction costs</small>
                         </div>
                         <div class="form-actions">
                             <button type="button" class="btn btn-next" onclick="nextStep(2)">
@@ -183,8 +213,8 @@
                                 <div class="range-slider">
                                     <input type="range" min="10" max="500" value="100" oninput="document.getElementById('roofArea').value = this.value">
                                     <div class="range-labels">
-                                        <span>10 m²</span>
-                                        <span>500 m²</span>
+                                        <span>10 m2</span>
+                                        <span>500 m2</span>
                                     </div>
                                 </div>
                             </div>
@@ -358,7 +388,7 @@
                         <div class="analysis-item">
                             <div class="analysis-icon"><i class="fas fa-leaf"></i></div>
                             <div class="analysis-info">
-                                <span>CO₂ Reduction</span>
+                                <span>CO2 Reduction</span>
                                 <strong id="co2-reduction">--</strong>
                             </div>
                         </div>
@@ -390,6 +420,7 @@
                 <p class="footer-note">Based on CGWB Guidelines and Scientific Parameters</p>
             </div>
             <div class="footer-links">
+                <a href="/history">View History</a>
                 <a href="#">About</a>
                 <a href="#">CGWB Guidelines</a>
                 <a href="#">Contact</a>

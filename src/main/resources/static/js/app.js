@@ -70,23 +70,21 @@ function loadDistricts() {
 }
 
 function nextStep(step) {
-    if (validateCurrentStep()) {
-        document.querySelectorAll('.form-step').forEach(el => el.classList.remove('active'));
-        document.getElementById('step' + step).classList.add('active');
-        
-        document.querySelectorAll('.progress-step').forEach(el => {
-            const stepNum = parseInt(el.getAttribute('data-step'));
-            if (stepNum < step) {
-                el.classList.add('completed');
-                el.classList.remove('active');
-            } else if (stepNum === step) {
-                el.classList.add('active');
-                el.classList.remove('completed');
-            } else {
-                el.classList.remove('active', 'completed');
-            }
-        });
-    }
+    document.querySelectorAll('.form-step').forEach(el => el.classList.remove('active'));
+    document.getElementById('step' + step).classList.add('active');
+    
+    document.querySelectorAll('.progress-step').forEach(el => {
+        const stepNum = parseInt(el.getAttribute('data-step'));
+        if (stepNum < step) {
+            el.classList.add('completed');
+            el.classList.remove('active');
+        } else if (stepNum === step) {
+            el.classList.add('active');
+            el.classList.remove('completed');
+        } else {
+            el.classList.remove('active', 'completed');
+        }
+    });
 }
 
 function prevStep(step) {
@@ -115,7 +113,12 @@ function validateCurrentStep() {
     let valid = true;
 
     inputs.forEach(input => {
-        if (!input.value) {
+        if (input.type === 'radio') {
+            const checked = document.querySelector('input[name="' + input.name + '"]:checked');
+            if (!checked) {
+                valid = false;
+            }
+        } else if (!input.value) {
             input.style.borderColor = '#e74c3c';
             valid = false;
             setTimeout(() => input.style.borderColor = '', 2000);
@@ -123,10 +126,6 @@ function validateCurrentStep() {
             input.style.borderColor = '';
         }
     });
-
-    if (!valid) {
-        alert('Please fill all required fields');
-    }
     
     return valid;
 }
@@ -143,7 +142,6 @@ function submitForm() {
         return;
     }
 
-    const name = document.getElementById('name').value.trim();
     const state = document.getElementById('state').value;
     const districtEl = document.getElementById('district');
     const district = districtEl ? (districtEl.value || state) : state;
@@ -156,12 +154,15 @@ function submitForm() {
     const openSpace = parseFloat(document.getElementById('openSpace').value) || 20;
     const soilTypeEl = document.getElementById('soilType');
     const soilType = soilTypeEl ? soilTypeEl.value : 'alluvial';
+    const areaTypeEl = document.querySelector('input[name="areaType"]:checked');
+    const areaType = areaTypeEl ? areaTypeEl.value : 'town';
 
     const data = {
-        name: name,
+        name: 'User',
         state: state,
         district: district,
         locationType: locationType,
+        areaType: areaType,
         numberOfDwellers: numberOfDwellers,
         roofArea: roofArea,
         roofType: roofType,
