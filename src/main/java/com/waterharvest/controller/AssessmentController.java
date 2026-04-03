@@ -95,53 +95,45 @@ public class AssessmentController {
         try {
             UserInput input = new UserInput();
             input.setName((String) data.getOrDefault("name", "User"));
-            input.setState((String) data.get("state"));
-            input.setDistrict((String) data.get("district"));
-            input.setLocationType((String) data.get("locationType"));
-            input.setAreaType((String) data.get("areaType"));
-            input.setNumberOfDwellers(((Number) data.get("numberOfDwellers")).intValue());
-            input.setRoofArea(((Number) data.get("roofArea")).doubleValue());
-            input.setRoofType((String) data.get("roofType"));
-            input.setOpenSpace(((Number) data.get("openSpace")).doubleValue());
-            input.setSoilType((String) data.get("soilType"));
+            input.setState((String) data.getOrDefault("state", ""));
+            input.setDistrict((String) data.getOrDefault("district", ""));
+            input.setLocationType((String) data.getOrDefault("locationType", "urban"));
+            input.setAreaType((String) data.getOrDefault("areaType", "town"));
+            input.setNumberOfDwellers(data.get("numberOfDwellers") != null ? ((Number) data.get("numberOfDwellers")).intValue() : 4);
+            input.setRoofArea(data.get("roofArea") != null ? ((Number) data.get("roofArea")).doubleValue() : 100.0);
+            input.setRoofType((String) data.getOrDefault("roofType", "concrete"));
+            input.setOpenSpace(data.get("openSpace") != null ? ((Number) data.get("openSpace")).doubleValue() : 20.0);
+            input.setSoilType((String) data.getOrDefault("soilType", "alluvial"));
 
             AssessmentResult result = new AssessmentResult();
-            result.setFeasible((Boolean) data.get("isFeasible"));
-            result.setRecommendedStructure((String) data.get("recommendedStructure"));
-            result.setRunoffGenerated(((Number) data.get("runoffGenerated")).doubleValue());
-            result.setWaterDemand(((Number) data.get("waterDemand")).doubleValue());
-            result.setSurplusWater(((Number) data.get("surplusWater")).doubleValue());
-            result.setAnnualRainfall(((Number) data.get("annualRainfall")).doubleValue());
-            result.setMessage((String) data.get("message"));
+            result.setFeasible(data.get("isFeasible") != null ? (Boolean) data.get("isFeasible") : true);
+            result.setRecommendedStructure((String) data.getOrDefault("recommendedStructure", "Recharge Pit"));
+            result.setRunoffGenerated(data.get("runoffGenerated") != null ? ((Number) data.get("runoffGenerated")).doubleValue() : 0.0);
+            result.setWaterDemand(data.get("waterDemand") != null ? ((Number) data.get("waterDemand")).doubleValue() : 0.0);
+            result.setSurplusWater(data.get("surplusWater") != null ? ((Number) data.get("surplusWater")).doubleValue() : 0.0);
+            result.setAnnualRainfall(data.get("annualRainfall") != null ? ((Number) data.get("annualRainfall")).doubleValue() : 0.0);
+            result.setMessage((String) data.getOrDefault("message", ""));
 
-            com.waterharvest.model.Dimensions dims = new com.waterharvest.model.Dimensions();
-            dims.setType((String) data.get("dimType"));
-            dims.setLength(((Number) data.get("dimLength")).doubleValue());
-            dims.setWidth(((Number) data.get("dimWidth")).doubleValue());
-            dims.setDepth(((Number) data.get("dimDepth")).doubleValue());
-            dims.setCapacity(((Number) data.get("dimCapacity")).doubleValue());
+            StructureDimensions dims = new StructureDimensions();
+            dims.setType((String) data.getOrDefault("dimType", "Recharge Pit"));
+            dims.setLength(data.get("dimLength") != null ? ((Number) data.get("dimLength")).doubleValue() : 1.0);
+            dims.setWidth(data.get("dimWidth") != null ? ((Number) data.get("dimWidth")).doubleValue() : 1.0);
+            dims.setDepth(data.get("dimDepth") != null ? ((Number) data.get("dimDepth")).doubleValue() : 1.0);
+            dims.setCapacity(data.get("dimCapacity") != null ? ((Number) data.get("dimCapacity")).doubleValue() : 1.0);
             result.setDimensions(dims);
 
-            com.waterharvest.model.CostEstimation cost = new com.waterharvest.model.CostEstimation();
-            cost.setStructureCost(((Number) data.get("structureCost")).doubleValue());
-            cost.setPlumbingCost(((Number) data.get("plumbingCost")).doubleValue());
-            cost.setFiltrationCost(((Number) data.get("filtrationCost")).doubleValue());
-            cost.setTotalCost(((Number) data.get("totalCost")).doubleValue());
-            cost.setPaybackPeriod(((Number) data.get("paybackPeriod")).doubleValue());
+            CostEstimation cost = new CostEstimation();
+            cost.setStructureCost(data.get("structureCost") != null ? ((Number) data.get("structureCost")).doubleValue() : 0.0);
+            cost.setPlumbingCost(data.get("plumbingCost") != null ? ((Number) data.get("plumbingCost")).doubleValue() : 0.0);
+            cost.setFiltrationCost(data.get("filtrationCost") != null ? ((Number) data.get("filtrationCost")).doubleValue() : 0.0);
+            cost.setTotalCost(data.get("totalCost") != null ? ((Number) data.get("totalCost")).doubleValue() : 0.0);
+            cost.setPaybackPeriod(data.get("paybackPeriod") != null ? ((Number) data.get("paybackPeriod")).doubleValue() : 0.0);
             result.setCostEstimation(cost);
 
-            com.waterharvest.model.EnvironmentalImpact env = new com.waterharvest.model.EnvironmentalImpact();
-            env.setWaterSaved20Years(((Number) data.get("waterSaved20Years")).doubleValue());
-            env.setCo2Reduction(((Number) data.get("co2Reduction")).doubleValue());
-            env.setCostSavings20Years(((Number) data.get("costSavings20Years")).doubleValue());
-            result.setEnvironmentalImpact(env);
+            result.setEnvironmentalImpact(data.get("co2Reduction") != null ? ((Number) data.get("co2Reduction")).doubleValue() : 0.0);
 
-            com.waterharvest.model.AquiferData aq = new com.waterharvest.model.AquiferData();
-            aq.setAquiferType((String) data.get("aquiferType"));
-            aq.setGroundwaterLevel(((Number) data.get("groundwaterLevel")).doubleValue());
-            aq.setRunoffCoefficient(((Number) data.get("runoffCoefficient")).doubleValue());
-            aq.setSoilType((String) data.get("aquiferSoilType"));
-            result.setAquiferData(aq);
+            result.setAquiferType((String) data.getOrDefault("aquiferType", "Alluvial"));
+            result.setGroundwaterLevel(data.get("groundwaterLevel") != null ? ((Number) data.get("groundwaterLevel")).doubleValue() : 10.0);
 
             byte[] pdfBytes = pdfReportService.generateReport(input, result);
 

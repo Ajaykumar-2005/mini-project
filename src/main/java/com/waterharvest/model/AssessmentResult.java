@@ -15,6 +15,8 @@ public class AssessmentResult {
     private CostEstimation costEstimation;
     private String feasibilityMessage;
     private double environmentalImpact;
+    private String message;
+    private AquiferData aquiferData;
 
     public AssessmentResult() {}
 
@@ -29,6 +31,9 @@ public class AssessmentResult {
 
     public double getRunoffGeneration() { return runoffGeneration; }
     public void setRunoffGeneration(double runoffGeneration) { this.runoffGeneration = runoffGeneration; }
+    
+    public double getRunoffGenerated() { return runoffGeneration; }
+    public void setRunoffGenerated(double runoffGeneration) { this.runoffGeneration = runoffGeneration; }
 
     public double getSurplusWater() { return surplusWater; }
     public void setSurplusWater(double surplusWater) { this.surplusWater = surplusWater; }
@@ -56,4 +61,10 @@ public class AssessmentResult {
 
     public double getEnvironmentalImpact() { return environmentalImpact; }
     public void setEnvironmentalImpact(double environmentalImpact) { this.environmentalImpact = environmentalImpact; }
+
+    public String getMessage() { return message; }
+    public void setMessage(String message) { this.message = message; }
+
+    public AquiferData getAquiferData() { return aquiferData; }
+    public void setAquiferData(AquiferData aquiferData) { this.aquiferData = aquiferData; }
 }

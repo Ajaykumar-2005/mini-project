@@ -2,8 +2,7 @@ package com.waterharvest.service;
 
 import com.lowagie.text.*;
 import com.lowagie.text.pdf.PdfWriter;
-import com.waterharvest.model.AssessmentResult;
-import com.waterharvest.model.UserInput;
+import com.waterharvest.model.*;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
@@ -50,52 +49,50 @@ public class PdfReportService {
 
             if (result.isFeasible()) {
                 document.add(new Paragraph("Status: FEASIBLE", boldFont));
-                document.add(new Paragraph("Recommended Structure: " + result.getRecommendedStructure(), normalFont));
+                document.add(new Paragraph("Recommended Structure: " + (result.getRecommendedStructure() != null ? result.getRecommendedStructure() : "N/A"), normalFont));
                 document.add(new Paragraph("Annual Runoff Generated: " + String.format("%.2f", result.getRunoffGenerated()) + " KL/year", normalFont));
                 document.add(new Paragraph("Water Demand: " + String.format("%.2f", result.getWaterDemand()) + " KL/year", normalFont));
                 document.add(new Paragraph("Surplus Water: " + String.format("%.2f", result.getSurplusWater()) + " KL/year", normalFont));
                 document.add(new Paragraph("Annual Rainfall: " + String.format("%.0f", result.getAnnualRainfall()) + " mm/year", normalFont));
             } else {
                 document.add(new Paragraph("Status: NOT FEASIBLE", boldFont));
-                document.add(new Paragraph("Reason: " + result.getMessage(), normalFont));
+                document.add(new Paragraph("Reason: " + (result.getMessage() != null ? result.getMessage() : "Insufficient data for assessment"), normalFont));
             }
 
             document.add(new Paragraph(" ", normalFont));
             document.add(new Paragraph("4. STRUCTURE DIMENSIONS", headerFont));
             if (result.getDimensions() != null) {
-                document.add(new Paragraph("Type: " + result.getDimensions().getType(), normalFont));
-                document.add(new Paragraph("Length: " + String.format("%.2f", result.getDimensions().getLength()) + " meters", normalFont));
-                document.add(new Paragraph("Width: " + String.format("%.2f", result.getDimensions().getWidth()) + " meters", normalFont));
-                document.add(new Paragraph("Depth: " + String.format("%.2f", result.getDimensions().getDepth()) + " meters", normalFont));
-                document.add(new Paragraph("Capacity: " + String.format("%.2f", result.getDimensions().getCapacity()) + " KL", normalFont));
+                StructureDimensions dims = result.getDimensions();
+                document.add(new Paragraph("Type: " + (dims.getType() != null ? dims.getType() : "Recharge Pit"), normalFont));
+                document.add(new Paragraph("Length: " + String.format("%.2f", dims.getLength()) + " meters", normalFont));
+                document.add(new Paragraph("Width: " + String.format("%.2f", dims.getWidth()) + " meters", normalFont));
+                document.add(new Paragraph("Depth: " + String.format("%.2f", dims.getDepth()) + " meters", normalFont));
+                document.add(new Paragraph("Capacity: " + String.format("%.2f", dims.getCapacity()) + " KL", normalFont));
             }
 
             document.add(new Paragraph(" ", normalFont));
             document.add(new Paragraph("5. COST ESTIMATION", headerFont));
             if (result.getCostEstimation() != null) {
-                document.add(new Paragraph("Structure Cost: Rs. " + String.format("%.0f", result.getCostEstimation().getStructureCost()), normalFont));
-                document.add(new Paragraph("Plumbing Cost: Rs. " + String.format("%.0f", result.getCostEstimation().getPlumbingCost()), normalFont));
-                document.add(new Paragraph("Filtration Cost: Rs. " + String.format("%.0f", result.getCostEstimation().getFiltrationCost()), normalFont));
-                document.add(new Paragraph("Total Cost: Rs. " + String.format("%.0f", result.getCostEstimation().getTotalCost()), normalFont));
-                document.add(new Paragraph("Payback Period: " + String.format("%.1f", result.getCostEstimation().getPaybackPeriod()) + " years", normalFont));
+                CostEstimation cost = result.getCostEstimation();
+                document.add(new Paragraph("Structure Cost: Rs. " + String.format("%.0f", cost.getStructureCost()), normalFont));
+                document.add(new Paragraph("Plumbing Cost: Rs. " + String.format("%.0f", cost.getPlumbingCost()), normalFont));
+                document.add(new Paragraph("Filtration Cost: Rs. " + String.format("%.0f", cost.getFiltrationCost()), normalFont));
+                document.add(new Paragraph("Total Cost: Rs. " + String.format("%.0f", cost.getTotalCost()), normalFont));
+                document.add(new Paragraph("Payback Period: " + String.format("%.1f", cost.getPaybackPeriod()) + " years", normalFont));
             }
 
             document.add(new Paragraph(" ", normalFont));
             document.add(new Paragraph("6. ENVIRONMENTAL IMPACT", headerFont));
-            if (result.getEnvironmentalImpact() != null) {
-                document.add(new Paragraph("Water Saved (20 years): " + String.format("%.0f", result.getEnvironmentalImpact().getWaterSaved20Years()) + " KL", normalFont));
-                document.add(new Paragraph("CO2 Reduction: " + String.format("%.2f", result.getEnvironmentalImpact().getCo2Reduction()) + " kg/year", normalFont));
-                document.add(new Paragraph("Cost Savings: Rs. " + String.format("%.0f", result.getEnvironmentalImpact().getCostSavings20Years()), normalFont));
+            double co2 = result.getEnvironmentalImpact();
+            document.add(new Paragraph("CO2 Reduction: " + String.format("%.2f", co2) + " kg/year", normalFont));
+            if (result.getCostEstimation() != null) {
+                document.add(new Paragraph("20-Year Savings: Rs. " + String.format("%.0f", result.getCostEstimation().getSavingsOver20Years()), normalFont));
             }
 
             document.add(new Paragraph(" ", normalFont));
             document.add(new Paragraph("7. AQUIFER INFORMATION", headerFont));
-            if (result.getAquiferData() != null) {
-                document.add(new Paragraph("Aquifer Type: " + result.getAquiferData().getAquiferType(), normalFont));
-                document.add(new Paragraph("Groundwater Level: " + String.format("%.2f", result.getAquiferData().getGroundwaterLevel()) + " meters", normalFont));
-                document.add(new Paragraph("Runoff Coefficient: " + String.format("%.2f", result.getAquiferData().getRunoffCoefficient()), normalFont));
-                document.add(new Paragraph("Soil Type: " + result.getAquiferData().getSoilType(), normalFont));
-            }
+            document.add(new Paragraph("Aquifer Type: " + (result.getAquiferType() != null ? result.getAquiferType() : "Unknown"), normalFont));
+            document.add(new Paragraph("Groundwater Level: " + String.format("%.2f", result.getGroundwaterLevel()) + " meters below ground level", normalFont));
 
             document.add(new Paragraph(" ", normalFont));
             document.add(new Paragraph(" ", normalFont));

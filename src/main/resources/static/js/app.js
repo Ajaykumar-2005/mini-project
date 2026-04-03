@@ -241,11 +241,8 @@ function displayResults(result) {
     setResultValue('result-runoff', result.runoffGeneration, 2);
     setResultValue('result-surplus', result.surplusWater, 2);
     
-    if (result.environmentalImpact && result.environmentalImpact.co2Reduction) {
-        setResultValue('result-co2', result.environmentalImpact.co2Reduction, 2);
-    } else {
-        setResultValue('result-co2', 0, 2);
-    }
+    const co2Value = result.environmentalImpact || 0;
+    setResultValue('result-co2', co2Value, 2);
 
     const badge = document.getElementById('feasibility-badge');
     if (badge) {
@@ -279,7 +276,7 @@ function displayResults(result) {
         
         setTextContent('payback-period', (result.costEstimation.paybackPeriod || 0) + ' years');
         setCurrencyText('savings-20yr', result.costEstimation.savingsOver20Years);
-        setTextContent('co2-reduction', (result.environmentalImpact || 0) + ' tonnes/year');
+        setTextContent('co2-reduction', (result.environmentalImpact || 0) + ' kg/year');
     }
 
     const feasibilityMsg = document.getElementById('feasibility-message');
@@ -405,9 +402,9 @@ function generatePdf() {
         waterSaved20Years: lastAssessmentResult.environmentalImpact?.waterSaved20Years || 0,
         co2Reduction: lastAssessmentResult.environmentalImpact?.co2Reduction || 0,
         costSavings20Years: lastAssessmentResult.environmentalImpact?.costSavings20Years || 0,
-        aquiferType: lastAssessmentResult.aquiferData?.aquiferType || '',
-        groundwaterLevel: lastAssessmentResult.aquiferData?.groundwaterLevel || 0,
-        runoffCoefficient: lastAssessmentResult.aquiferData?.runoffCoefficient || 0,
+        aquiferType: lastAssessmentResult.aquiferType || '',
+        groundwaterLevel: lastAssessmentResult.groundwaterLevel || 0,
+        runoffCoefficient: lastAssessmentResult.aquiferData?.runoffCoefficient || 0.3,
         aquiferSoilType: lastAssessmentResult.aquiferData?.soilType || ''
     };
 
@@ -417,7 +414,12 @@ function generatePdf() {
         body: JSON.stringify(inputData)
     })
     .then(response => {
-        if (!response.ok) throw new Error('PDF generation failed');
+        if (!response.ok) {
+            return response.text().then(text => {
+                console.error('Server error:', text);
+                throw new Error('PDF generation failed: ' + text);
+            });
+        }
         return response.blob();
     })
     .then(blob => {
