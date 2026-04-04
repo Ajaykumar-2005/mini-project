@@ -55,7 +55,7 @@ public class AssessmentService {
         }
 
         double openSpace = input.getOpenSpace() != null ? input.getOpenSpace() : 20.0;
-        recommendStructure(result, openSpace, runoff, aquiferData, input);
+        recommendStructure(result, openSpace, runoff, surplus, aquiferData, input);
 
         result.setEnvironmentalImpact(Math.round(runoff * 0.4 * 100.0) / 100.0);
 
@@ -109,7 +109,7 @@ public class AssessmentService {
         }
     }
 
-    private void recommendStructure(AssessmentResult result, double openSpace, double runoff, AquiferData aquiferData, UserInput input) {
+    private void recommendStructure(AssessmentResult result, double openSpace, double runoff, double surplusWater, AquiferData aquiferData, UserInput input) {
         StructureDimensions dimensions = new StructureDimensions();
         double gwl = aquiferData.getGroundwaterLevel();
         String soilType = aquiferData.getSoilType() != null ? aquiferData.getSoilType().toLowerCase() : "alluvial";
@@ -167,7 +167,7 @@ public class AssessmentService {
         }
 
         result.setDimensions(dimensions);
-        result.setCostEstimation(calculateCost(result, runoff, input));
+        result.setCostEstimation(calculateCost(result, runoff, surplusWater, input));
     }
 
     private double getAreaCostMultiplier(String areaType) {
@@ -181,7 +181,7 @@ public class AssessmentService {
         }
     }
 
-    private CostEstimation calculateCost(AssessmentResult result, double runoff, UserInput input) {
+    private CostEstimation calculateCost(AssessmentResult result, double runoff, double surplusWater, UserInput input) {
         CostEstimation cost = new CostEstimation();
         double baseCost = 0;
         String structureType = result.getRecommendedStructure();
@@ -215,20 +215,24 @@ public class AssessmentService {
 
         cost.setStructureCost(Math.round(baseCost));
         cost.setTotalCost(Math.round(cost.getStructureCost() + cost.getPlumbingCost() + cost.getFiltrationCost()));
-        cost.setAnnualMaintenance(Math.round(cost.getTotalCost() * 0.05));
+        
+        double annualMaintenance = 2000;
+        cost.setAnnualMaintenance(Math.round(annualMaintenance));
 
-        double waterSavingKL = runoff;
+        double waterSavingKL = surplusWater;
         double waterRate = 50;
         cost.setAnnualWaterSaving(waterSavingKL);
         cost.setWaterSavingValue(Math.round(waterSavingKL * waterRate));
 
-        if (cost.getWaterSavingValue() > cost.getAnnualMaintenance()) {
-            cost.setPaybackPeriod(Math.round(cost.getTotalCost() / (cost.getWaterSavingValue() - cost.getAnnualMaintenance()) * 10.0) / 10.0);
+        double annualNetSavings = cost.getWaterSavingValue() - annualMaintenance;
+        if (annualNetSavings > 0) {
+            cost.setPaybackPeriod(Math.round(cost.getTotalCost() / annualNetSavings * 10.0) / 10.0);
         } else {
             cost.setPaybackPeriod(20);
         }
 
-        cost.setSavingsOver20Years(Math.round((cost.getWaterSavingValue() * 20) - (cost.getAnnualMaintenance() * 20) - cost.getTotalCost()));
+        double netSavings20Years = (cost.getWaterSavingValue() * 20) - (annualMaintenance * 20) - cost.getTotalCost();
+        cost.setSavingsOver20Years(Math.round(netSavings20Years));
 
         return cost;
     }
