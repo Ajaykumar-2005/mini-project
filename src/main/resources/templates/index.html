@@ -399,6 +399,30 @@
                             <span>Total Investment</span>
                             <span id="cost-total">--</span>
                         </div>
+                        <div class="custom-cost-toggle">
+                            <label class="checkbox-toggle">
+                                <input type="checkbox" id="customCostToggle" onchange="toggleCustomCost()">
+                                <span class="toggle-label">Enter Custom Cost</span>
+                            </label>
+                        </div>
+                        <div id="customCostFields" class="custom-cost-fields hidden">
+                            <div class="custom-cost-input">
+                                <label>Structure Cost (₹)</label>
+                                <input type="number" id="customStructureCost" placeholder="e.g., 40000" oninput="calculateCustomTotal()">
+                            </div>
+                            <div class="custom-cost-input">
+                                <label>Plumbing Cost (₹)</label>
+                                <input type="number" id="customPlumbingCost" placeholder="e.g., 10000" oninput="calculateCustomTotal()">
+                            </div>
+                            <div class="custom-cost-input">
+                                <label>Filtration Cost (₹)</label>
+                                <input type="number" id="customFiltrationCost" placeholder="e.g., 15000" oninput="calculateCustomTotal()">
+                            </div>
+                            <div class="custom-cost-total">
+                                <span>Custom Total:</span>
+                                <span id="customTotal">₹ 0</span>
+                            </div>
+                        </div>
                         <div class="cost-note">
                             <small><i class="fas fa-info-circle"></i> Costs are estimates based on market research (Houseyog.com, Construction Estimator India 2026). Actual costs may vary by location, contractor, and material quality. For precise quotes, consult local service providers.</small>
                         </div>

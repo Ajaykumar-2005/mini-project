@@ -464,3 +464,48 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+function toggleCustomCost() {
+    const checkbox = document.getElementById('customCostToggle');
+    const customFields = document.getElementById('customCostFields');
+    const costStructure = document.getElementById('cost-structure');
+    const costPlumbing = document.getElementById('cost-plumbing');
+    const costFiltration = document.getElementById('cost-filtration');
+    const costTotal = document.getElementById('cost-total');
+    
+    if (checkbox && customFields) {
+        if (checkbox.checked) {
+            customFields.classList.remove('hidden');
+            if (lastAssessmentResult && lastAssessmentResult.costEstimation) {
+                document.getElementById('customStructureCost').value = lastAssessmentResult.costEstimation.structureCost || 0;
+                document.getElementById('customPlumbingCost').value = lastAssessmentResult.costEstimation.plumbingCost || 0;
+                document.getElementById('customFiltrationCost').value = lastAssessmentResult.costEstimation.filtrationCost || 0;
+                calculateCustomTotal();
+            }
+        } else {
+            customFields.classList.add('hidden');
+            if (lastAssessmentResult && lastAssessmentResult.costEstimation) {
+                const totalCost = lastAssessmentResult.costEstimation.totalCost || 0;
+                const minCost = Math.round(totalCost * 0.8);
+                const maxCost = Math.round(totalCost * 1.2);
+                costTotal.innerHTML = '₹ ' + minCost.toLocaleString('en-IN') + ' - ₹ ' + maxCost.toLocaleString('en-IN');
+            }
+        }
+    }
+}
+
+function calculateCustomTotal() {
+    const structureCost = parseFloat(document.getElementById('customStructureCost').value) || 0;
+    const plumbingCost = parseFloat(document.getElementById('customPlumbingCost').value) || 0;
+    const filtrationCost = parseFloat(document.getElementById('customFiltrationCost').value) || 0;
+    
+    const total = structureCost + plumbingCost + filtrationCost;
+    document.getElementById('customTotal').innerHTML = '₹ ' + total.toLocaleString('en-IN');
+    
+    const costTotal = document.getElementById('cost-total');
+    if (costTotal) {
+        const minCost = Math.round(total * 0.8);
+        const maxCost = Math.round(total * 1.2);
+        costTotal.innerHTML = '₹ ' + minCost.toLocaleString('en-IN') + ' - ₹ ' + maxCost.toLocaleString('en-IN');
+    }
+}
