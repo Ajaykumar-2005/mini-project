@@ -173,12 +173,16 @@ public class AssessmentService {
     private double getAreaCostMultiplier(String areaType) {
         if (areaType == null) return 1.0;
         switch (areaType.toLowerCase()) {
-            case "metro": return 1.35;
+            case "mumbai": return 1.50;
+            case "delhi": return 1.40;
+            case "bangalore": return 1.35;
+            case "metro": return 1.30;
             case "tier2": return 1.15;
-            case "town": return 1.0;
+            case "town": return 1.00;
             case "village": return 0.85;
             default: return 1.0;
         }
+    }
     }
 
     private CostEstimation calculateCost(AssessmentResult result, double runoff, double surplusWater, UserInput input) {
