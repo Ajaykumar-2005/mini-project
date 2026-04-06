@@ -168,6 +168,8 @@ function submitForm() {
         roofType: roofType,
         openSpace: openSpace,
         soilType: soilType,
+        costYear: document.getElementById('costYear')?.value || 2026,
+        materialQuality: document.querySelector('input[name="materialQuality"]:checked')?.value || 'standard',
         language: 'en'
     };
 

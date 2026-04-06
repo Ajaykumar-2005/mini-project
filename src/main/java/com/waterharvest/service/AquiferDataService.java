@@ -100,6 +100,117 @@ public class AquiferDataService {
         aquiferDatabase.put("telangana_hyderabad", new AquiferData(
             "Telangana", "Hyderabad", "Granite", 14.0, 800, "Red Sandy", 0.22, "Moderate"
         ));
+        aquiferDatabase.put("maharashtra_nashik", new AquiferData(
+            "Maharashtra", "Nashik", "Basalt", 12.0, 650, "Black Cotton", 0.20, "Good"
+        ));
+        aquiferDatabase.put("maharashtra_thane", new AquiferData(
+            "Maharashtra", "Thane", "Basalt", 9.0, 1800, "Laterite", 0.22, "Good"
+        ));
+        aquiferDatabase.put("maharashtra_navimumbai", new AquiferData(
+            "Maharashtra", "Navi Mumbai", "Basalt", 8.0, 2100, "Laterite", 0.22, "Good"
+        ));
+        aquiferDatabase.put("maharashtra_kolhapur", new AquiferData(
+            "Maharashtra", "Kolhapur", "Basalt", 11.0, 950, "Laterite", 0.25, "Good"
+        ));
+        aquiferDatabase.put("maharashtra_solapur", new AquiferData(
+            "Maharashtra", "Solapur", "Basalt", 18.0, 550, "Black Cotton", 0.18, "Moderate"
+        ));
+        aquiferDatabase.put("maharashtra_aurangabad", new AquiferData(
+            "Maharashtra", "Aurangabad", "Basalt", 16.0, 600, "Black Cotton", 0.18, "Moderate"
+        ));
+        aquiferDatabase.put("gujarat_vadodara", new AquiferData(
+            "Gujarat", "Vadodara", "Alluvial", 14.0, 850, "Alluvial", 0.38, "Moderate"
+        ));
+        aquiferDatabase.put("gujarat_rajkot", new AquiferData(
+            "Gujarat", "Rajkot", "Alluvial", 20.0, 450, "Sandy", 0.30, "Poor"
+        ));
+        aquiferDatabase.put("gujarat_gandhinagar", new AquiferData(
+            "Gujarat", "Gandhinagar", "Alluvial", 18.0, 600, "Alluvial", 0.35, "Moderate"
+        ));
+        aquiferDatabase.put("karnataka_mangalore", new AquiferData(
+            "Karnataka", "Mangalore", "Laterite", 6.0, 3200, "Laterite", 0.30, "Good"
+        ));
+        aquiferDatabase.put("karnataka_hubli", new AquiferData(
+            "Karnataka", "Hubli", "Basalt", 14.0, 750, "Black Cotton", 0.25, "Good"
+        ));
+        aquiferDatabase.put("karnataka_belgaum", new AquiferData(
+            "Karnataka", "Belgaum", "Basalt", 12.0, 900, "Laterite", 0.28, "Good"
+        ));
+        aquiferDatabase.put("tamil nadu_madurai", new AquiferData(
+            "Tamil Nadu", "Madurai", "Hard Rock", 13.0, 850, "Red Sandy", 0.22, "Moderate"
+        ));
+        aquiferDatabase.put("tamil nadu_tiruchirappalli", new AquiferData(
+            "Tamil Nadu", "Tiruchirappalli", "Hard Rock", 14.0, 750, "Red Sandy", 0.20, "Moderate"
+        ));
+        aquiferDatabase.put("tamil nadu_salem", new AquiferData(
+            "Tamil Nadu", "Salem", "Hard Rock", 16.0, 700, "Red Sandy", 0.22, "Good"
+        ));
+        aquiferDatabase.put("tamil nadu_tirunelveli", new AquiferData(
+            "Tamil Nadu", "Tirunelveli", "Hard Rock", 18.0, 650, "Red Sandy", 0.20, "Good"
+        ));
+        aquiferDatabase.put("uttar pradesh_kanpur", new AquiferData(
+            "Uttar Pradesh", "Kanpur", "Alluvial", 12.0, 850, "Alluvial", 0.35, "Moderate"
+        ));
+        aquiferDatabase.put("uttar pradesh_agRA", new AquiferData(
+            "Uttar Pradesh", "Agra", "Alluvial", 18.0, 700, "Alluvial", 0.32, "Moderate - declining"
+        ));
+        aquiferDatabase.put("uttar pradesh_allahabad", new AquiferData(
+            "Uttar Pradesh", "Allahabad", "Alluvial", 9.0, 950, "Alluvial", 0.35, "Good"
+        ));
+        aquiferDatabase.put("uttar pradesh_meerut", new AquiferData(
+            "Uttar Pradesh", "Meerut", "Alluvial", 15.0, 750, "Alluvial", 0.35, "Moderate"
+        ));
+        aquiferDatabase.put("west bengal_howrah", new AquiferData(
+            "West Bengal", "Howrah", "Alluvial", 7.0, 1550, "Alluvial", 0.35, "Good"
+        ));
+        aquiferDatabase.put("west bengal_durgapur", new AquiferData(
+            "West Bengal", "Durgapur", "Alluvial", 8.0, 1400, "Alluvial", 0.32, "Good"
+        ));
+        aquiferDatabase.put("west bengal_siliguri", new AquiferData(
+            "West Bengal", "Siliguri", "Alluvial", 6.0, 1800, "Alluvial", 0.35, "Good"
+        ));
+        aquiferDatabase.put("odisha_cuttack", new AquiferData(
+            "Odisha", "Cuttack", "Alluvial", 8.0, 1300, "Alluvial", 0.32, "Good"
+        ));
+        aquiferDatabase.put("odisha_berhampur", new AquiferData(
+            "Odisha", "Berhampur", "Alluvial", 7.0, 1250, "Alluvial", 0.30, "Good"
+        ));
+        aquiferDatabase.put("jharkhand_jamshedpur", new AquiferData(
+            "Jharkhand", "Jamshedpur", "Granite", 9.0, 1200, "Red Sandy", 0.25, "Good"
+        ));
+        aquiferDatabase.put("bihar_gaya", new AquiferData(
+            "Bihar", "Gaya", "Alluvial", 9.0, 1050, "Alluvial", 0.32, "Moderate"
+        ));
+        aquiferDatabase.put("madhya pradesh_indore", new AquiferData(
+            "Madhya Pradesh", "Indore", "Sandstone", 14.0, 950, "Red Sandy", 0.28, "Good"
+        ));
+        aquiferDatabase.put("madhya pradesh_jabalpur", new AquiferData(
+            "Madhya Pradesh", "Jabalpur", "Sandstone", 12.0, 1100, "Red Sandy", 0.28, "Good"
+        ));
+        aquiferDatabase.put("punjab_ludhiana", new AquiferData(
+            "Punjab", "Ludhiana", "Alluvial", 18.0, 950, "Alluvial", 0.38, "Moderate"
+        ));
+        aquiferDatabase.put("punjab_amritsar", new AquiferData(
+            "Punjab", "Amritsar", "Alluvial", 22.0, 850, "Alluvial", 0.35, "Moderate"
+        ));
+        aquiferDatabase.put("haryana_faridabad", new AquiferData(
+            "Haryana", "Faridabad", "Alluvial", 20.0, 650, "Alluvial", 0.35, "Poor"
+        ));
+        aquiferDatabase.put("haryana_panipat", new AquiferData(
+            "Haryana", "Panipat", "Alluvial", 24.0, 550, "Alluvial", 0.32, "Poor"
+        ));
+        aquiferDatabase.put("assam_dibrugarh", new AquiferData(
+            "Assam", "Dibrugarh", "Alluvial", 4.0, 2100, "Alluvial", 0.35, "Good"
+        ));
+        aquiferDatabase.put("goa_panji", new AquiferData(
+            "Goa", "Panaji", "Laterite", 5.0, 2800, "Laterite", 0.30, "Good"
+        ));
+        aquiferDatabase.put("uttarakhand_dehradun", new AquiferData(
+            "Uttarakhand", "Dehradun", "Alluvial", 10.0, 1550, "Alluvial", 0.35, "Good"
+        ));
+        aquiferDatabase.put("himachal pradesh_shimla", new AquiferData(
+            "Himachal Pradesh", "Shimla", "Granite", 8.0, 1400, "Sandy", 0.25, "Good"
+        ));
     }
 
     public AquiferData getAquiferData(String state, String district) {

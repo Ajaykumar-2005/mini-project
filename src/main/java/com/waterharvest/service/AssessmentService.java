@@ -184,36 +184,55 @@ public class AssessmentService {
         }
     }
 
+    private double getYearMultiplier(Integer costYear) {
+        if (costYear == null) return 1.0;
+        int currentYear = 2026;
+        int yearDiff = currentYear - costYear;
+        return Math.pow(0.93, yearDiff);
+    }
+
+    private double getQualityMultiplier(String quality) {
+        if (quality == null) return 1.0;
+        switch (quality.toLowerCase()) {
+            case "basic": return 0.8;
+            case "premium": return 1.3;
+            case "standard": return 1.0;
+            default: return 1.0;
+        }
+    }
+
     private CostEstimation calculateCost(AssessmentResult result, double runoff, double surplusWater, UserInput input) {
         CostEstimation cost = new CostEstimation();
         double baseCost = 0;
         String structureType = result.getRecommendedStructure();
         
         double areaMultiplier = getAreaCostMultiplier(input.getAreaType());
+        double yearMultiplier = getYearMultiplier(input.getCostYear());
+        double qualityMultiplier = getQualityMultiplier(input.getMaterialQuality());
 
         if (structureType != null && structureType.contains("Recharge Pit")) {
             double volume = result.getDimensions().getLength() * result.getDimensions().getWidth() * result.getDimensions().getDepth();
-            baseCost = volume * 3500 * areaMultiplier;
-            cost.setPlumbingCost(Math.round(8000 * areaMultiplier));
-            cost.setFiltrationCost(Math.round(12000 * areaMultiplier));
+            baseCost = volume * 3500 * areaMultiplier * yearMultiplier * qualityMultiplier;
+            cost.setPlumbingCost(Math.round(8000 * areaMultiplier * yearMultiplier));
+            cost.setFiltrationCost(Math.round(12000 * areaMultiplier * yearMultiplier));
         } else if (structureType != null && structureType.contains("Trench")) {
             double volume = result.getDimensions().getLength() * result.getDimensions().getWidth() * result.getDimensions().getDepth();
-            baseCost = volume * 3000 * areaMultiplier;
-            cost.setPlumbingCost(Math.round(6000 * areaMultiplier));
-            cost.setFiltrationCost(Math.round(10000 * areaMultiplier));
+            baseCost = volume * 3000 * areaMultiplier * yearMultiplier;
+            cost.setPlumbingCost(Math.round(6000 * areaMultiplier * yearMultiplier));
+            cost.setFiltrationCost(Math.round(10000 * areaMultiplier * yearMultiplier));
         } else if (structureType != null && structureType.contains("Shaft")) {
             double volume = Math.PI * Math.pow(result.getDimensions().getDiameter() / 2, 2) * result.getDimensions().getDepth();
-            baseCost = volume * 4000 * areaMultiplier;
-            cost.setPlumbingCost(Math.round(5000 * areaMultiplier));
-            cost.setFiltrationCost(Math.round(8000 * areaMultiplier));
+            baseCost = volume * 4000 * areaMultiplier * yearMultiplier;
+            cost.setPlumbingCost(Math.round(5000 * areaMultiplier * yearMultiplier));
+            cost.setFiltrationCost(Math.round(8000 * areaMultiplier * yearMultiplier));
         } else if (structureType != null && structureType.contains("Storage Tank")) {
-            baseCost = result.getDimensions().getTankCapacity() * 2500 * areaMultiplier;
-            cost.setPlumbingCost(Math.round(10000 * areaMultiplier));
-            cost.setFiltrationCost(Math.round(15000 * areaMultiplier));
+            baseCost = result.getDimensions().getTankCapacity() * 2500 * areaMultiplier * yearMultiplier;
+            cost.setPlumbingCost(Math.round(10000 * areaMultiplier * yearMultiplier));
+            cost.setFiltrationCost(Math.round(15000 * areaMultiplier * yearMultiplier));
         } else {
-            baseCost = 25000 * areaMultiplier;
-            cost.setPlumbingCost(Math.round(7000 * areaMultiplier));
-            cost.setFiltrationCost(Math.round(10000 * areaMultiplier));
+            baseCost = 25000 * areaMultiplier * yearMultiplier;
+            cost.setPlumbingCost(Math.round(7000 * areaMultiplier * yearMultiplier));
+            cost.setFiltrationCost(Math.round(10000 * areaMultiplier * yearMultiplier));
         }
 
         cost.setStructureCost(Math.round(baseCost));

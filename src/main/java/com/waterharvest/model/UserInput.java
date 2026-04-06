@@ -13,6 +13,8 @@ public class UserInput {
     private String soilType;
     private String areaType = "town";
     private String language = "en";
+    private Integer costYear = 2026;
+    private String materialQuality = "standard";
 
     public UserInput() {}
 
@@ -48,4 +50,10 @@ public class UserInput {
 
     public String getLanguage() { return language; }
     public void setLanguage(String language) { this.language = language; }
+
+    public Integer getCostYear() { return costYear; }
+    public void setCostYear(Integer costYear) { this.costYear = costYear; }
+
+    public String getMaterialQuality() { return materialQuality; }
+    public void setMaterialQuality(String materialQuality) { this.materialQuality = materialQuality; }
 }
