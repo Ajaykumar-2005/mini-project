@@ -468,16 +468,19 @@ document.addEventListener('DOMContentLoaded', function() {
 function toggleCustomCost() {
     const checkbox = document.getElementById('customCostToggle');
     const customFields = document.getElementById('customCostFields');
-    const costStructure = document.getElementById('cost-structure');
-    const costPlumbing = document.getElementById('cost-plumbing');
-    const costFiltration = document.getElementById('cost-filtration');
     const costTotal = document.getElementById('cost-total');
     
     if (checkbox && customFields) {
         if (checkbox.checked) {
             customFields.classList.remove('hidden');
             if (lastAssessmentResult && lastAssessmentResult.costEstimation) {
-                document.getElementById('customStructureCost').value = lastAssessmentResult.costEstimation.structureCost || 0;
+                const structCost = lastAssessmentResult.costEstimation.structureCost || 0;
+                const structShare = structCost * 0.2;
+                document.getElementById('customExcavation').value = Math.round(structShare);
+                document.getElementById('customPCC').value = Math.round(structShare * 1.6);
+                document.getElementById('customStoneGravel').value = Math.round(structShare * 2);
+                document.getElementById('customBrickwork').value = Math.round(structShare * 1.5);
+                document.getElementById('customLabour').value = Math.round(structShare * 2);
                 document.getElementById('customPlumbingCost').value = lastAssessmentResult.costEstimation.plumbingCost || 0;
                 document.getElementById('customFiltrationCost').value = lastAssessmentResult.costEstimation.filtrationCost || 0;
                 calculateCustomTotal();
@@ -495,7 +498,15 @@ function toggleCustomCost() {
 }
 
 function calculateCustomTotal() {
-    const structureCost = parseFloat(document.getElementById('customStructureCost').value) || 0;
+    const excavation = parseFloat(document.getElementById('customExcavation').value) || 0;
+    const pcc = parseFloat(document.getElementById('customPCC').value) || 0;
+    const stoneGravel = parseFloat(document.getElementById('customStoneGravel').value) || 0;
+    const brickwork = parseFloat(document.getElementById('customBrickwork').value) || 0;
+    const labour = parseFloat(document.getElementById('customLabour').value) || 0;
+    
+    const structureCost = excavation + pcc + stoneGravel + brickwork + labour;
+    document.getElementById('customStructureCost').value = structureCost;
+    
     const plumbingCost = parseFloat(document.getElementById('customPlumbingCost').value) || 0;
     const filtrationCost = parseFloat(document.getElementById('customFiltrationCost').value) || 0;
     

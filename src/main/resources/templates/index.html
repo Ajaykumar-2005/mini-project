@@ -406,16 +406,46 @@
                             </label>
                         </div>
                         <div id="customCostFields" class="custom-cost-fields hidden">
-                            <div class="custom-cost-input">
-                                <label>Structure Cost (₹)</label>
-                                <input type="number" id="customStructureCost" placeholder="e.g., 40000" oninput="calculateCustomTotal()">
+                            <div class="custom-cost-header">
+                                <span>Structure Cost Breakdown</span>
                             </div>
+                            <div class="custom-cost-input-row">
+                                <div class="custom-cost-input small">
+                                    <label>Excavation (₹)</label>
+                                    <input type="number" id="customExcavation" placeholder="e.g., 5000" oninput="calculateCustomTotal()">
+                                </div>
+                                <div class="custom-cost-input small">
+                                    <label>PCC (₹)</label>
+                                    <input type="number" id="customPCC" placeholder="e.g., 8000" oninput="calculateCustomTotal()">
+                                </div>
+                            </div>
+                            <div class="custom-cost-input-row">
+                                <div class="custom-cost-input small">
+                                    <label>Stone/Gravel (₹)</label>
+                                    <input type="number" id="customStoneGravel" placeholder="e.g., 10000" oninput="calculateCustomTotal()">
+                                </div>
+                                <div class="custom-cost-input small">
+                                    <label>Brickwork (₹)</label>
+                                    <input type="number" id="customBrickwork" placeholder="e.g., 7500" oninput="calculateCustomTotal()">
+                                </div>
+                            </div>
+                            <div class="custom-cost-input-row">
+                                <div class="custom-cost-input small">
+                                    <label>Labour (₹)</label>
+                                    <input type="number" id="customLabour" placeholder="e.g., 10000" oninput="calculateCustomTotal()">
+                                </div>
+                                <div class="custom-cost-input small">
+                                    <label>Structure Total (₹)</label>
+                                    <input type="number" id="customStructureCost" placeholder="Auto-calculated" readonly>
+                                </div>
+                            </div>
+                            <div class="custom-cost-divider"></div>
                             <div class="custom-cost-input">
-                                <label>Plumbing Cost (₹)</label>
+                                <label>Plumbing & Piping Cost (₹)</label>
                                 <input type="number" id="customPlumbingCost" placeholder="e.g., 10000" oninput="calculateCustomTotal()">
                             </div>
                             <div class="custom-cost-input">
-                                <label>Filtration Cost (₹)</label>
+                                <label>Filtration System Cost (₹)</label>
                                 <input type="number" id="customFiltrationCost" placeholder="e.g., 15000" oninput="calculateCustomTotal()">
                             </div>
                             <div class="custom-cost-total">

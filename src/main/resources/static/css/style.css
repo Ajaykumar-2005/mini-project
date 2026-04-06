@@ -933,6 +933,41 @@ body {
     margin-top: 10px;
 }
 
+.custom-cost-header {
+    font-weight: 600;
+    color: var(--primary-dark);
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #ccc;
+}
+
+.custom-cost-input-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.custom-cost-input.small {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+.custom-cost-input.small label {
+    font-size: 0.75rem;
+}
+
+.custom-cost-input input[readonly] {
+    background: #e9ecef;
+    color: #666;
+    cursor: not-allowed;
+}
+
+.custom-cost-divider {
+    height: 1px;
+    background: #ccc;
+    margin: 15px 0;
+}
+
 .cost-analysis {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
