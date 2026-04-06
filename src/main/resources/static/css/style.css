@@ -820,6 +820,28 @@ body {
     border-bottom: none;
 }
 
+.cost-note {
+    background-color: #fff3cd;
+    border: 1px solid #ffc107;
+    border-radius: 8px;
+    padding: 10px;
+    margin-top: 15px;
+    text-align: center;
+}
+
+.cost-note small {
+    color: #856404;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.cost-note i {
+    color: #ffc107;
+}
+
 .cost-analysis {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
