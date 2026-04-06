@@ -269,10 +269,22 @@ function displayResults(result) {
     }
 
     if (result.costEstimation) {
+        const totalCost = result.costEstimation.totalCost || 0;
+        const minCost = Math.round(totalCost * 0.8);
+        const maxCost = Math.round(totalCost * 1.2);
+        
+        function formatRange(value) {
+            const min = Math.round(value * 0.8);
+            const max = Math.round(value * 1.2);
+            return '₹ ' + min.toLocaleString('en-IN') + ' - ₹ ' + max.toLocaleString('en-IN');
+        }
+        
         setCurrencyText('cost-structure', result.costEstimation.structureCost);
         setCurrencyText('cost-plumbing', result.costEstimation.plumbingCost);
         setCurrencyText('cost-filtration', result.costEstimation.filtrationCost);
-        setCurrencyText('cost-total', result.costEstimation.totalCost);
+        
+        document.getElementById('cost-total').innerHTML = 
+            '₹ ' + minCost.toLocaleString('en-IN') + ' - ₹ ' + maxCost.toLocaleString('en-IN');
         
         setTextContent('payback-period', (result.costEstimation.paybackPeriod || 0) + ' years');
         setCurrencyText('savings-20yr', result.costEstimation.savingsOver20Years);
