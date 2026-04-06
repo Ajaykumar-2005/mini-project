@@ -183,7 +183,6 @@ public class AssessmentService {
             default: return 1.0;
         }
     }
-    }
 
     private CostEstimation calculateCost(AssessmentResult result, double runoff, double surplusWater, UserInput input) {
         CostEstimation cost = new CostEstimation();

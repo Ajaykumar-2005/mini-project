@@ -800,10 +800,23 @@ body {
 
 .cost-row {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     padding: 12px 0;
     border-bottom: 1px dashed var(--light);
     font-size: 0.95rem;
+}
+
+.cost-row span:first-child {
+    display: flex;
+    justify-content: space-between;
+}
+
+.cost-detail {
+    font-size: 0.75rem;
+    color: #888;
+    margin-top: 4px;
+    font-weight: normal;
+    display: block;
 }
 
 .cost-row:last-child {
