@@ -6,7 +6,7 @@
 ## 1. Project Overview
 
 **Q: What is this project?**
-> JalDhara is a web-based tool that assesses the feasibility of rooftop rainwater harvesting (RWH) for buildings in India. It provides structure recommendations, cost estimation, and environmental impact analysis.
+> JalDhara is a comprehensive web-based tool that assesses the feasibility of rooftop rainwater harvesting (RWH) for buildings in India. It provides structure recommendations, cost estimation, and environmental impact analysis with multi-factor adjustments.
 
 **Q: What is Rainwater Harvesting?**
 > Rainwater harvesting is the process of collecting and storing rainwater for later use, rather than letting it runoff. This reduces dependency on groundwater and promotes water conservation.
@@ -23,11 +23,13 @@
 
 **Q: What features does the tool provide?**
 > 1. Feasibility Check - Determines if RWH is viable
-> 2. Aquifer Database - 30+ Indian districts with groundwater data
+> 2. Aquifer Database - 70+ Indian districts with groundwater data
 > 3. Structure Recommendations - Recharge pit, trench, shaft, or storage tank
-> 4. Cost Estimation - Location-based pricing
+> 4. Cost Estimation - Location + Year + Quality based pricing
 > 5. Environmental Impact - CO₂ reduction calculation
 > 6. PDF Report - Downloadable assessment report
+> 7. Custom Cost Entry - User can enter their own quotes
+> 8. Detailed Cost Breakdown - Excavation, PCC, Stone/Gravel, Brickwork, Labour
 
 **Q: How is feasibility determined?**
 > Feasible if: Runoff ≥ 30% of Water Demand
@@ -61,26 +63,89 @@ CO₂ Reduction (kg/year) = Surplus Water × 0.4
 20-Year Savings = (Surplus × ₹50 × 20) - (₹2,000 × 20) - Total Cost
 ```
 
-### Runoff Coefficients by Roof Type
-| Roof Type | Coefficient |
-|----------|-------------|
-| Metal Sheet | 0.90 |
-| Concrete/RCC | 0.85 |
-| Asbestos | 0.80 |
-| Clay Tile | 0.75 |
-| Thatched | 0.30 |
+### Year-Based Cost Adjustment
+```
+Cost for Year = Base Cost × (0.93)^(2026 - Year)
+- 2024: 0.86x (14% less)
+- 2025: 0.93x (7% less)
+- 2026: 1.00x (current)
+```
 
-### Cost Multipliers by Location
-| Area Type | Multiplier |
-|-----------|------------|
-| Metro | 1.35x |
-| Tier-2 City | 1.15x |
-| Town | 1.00x |
-| Village | 0.85x |
+### Runoff Coefficients by Roof Type
+| Roof Type | Coefficient | Source |
+|----------|-------------|--------|
+| Metal Sheet | 0.90 | Scientific literature |
+| Concrete/RCC | 0.85 | Scientific literature |
+| Asbestos | 0.80 | Scientific literature |
+| Clay Tile | 0.75 | Scientific literature |
+| Thatched | 0.30 | Scientific literature |
 
 ---
 
-## 4. Technical Questions
+## 4. Cost Multipliers (Data Sources)
+
+### Location-Based Cost Multipliers
+| Area Type | Multiplier | Source |
+|-----------|------------|--------|
+| Mumbai | 1.50x | Construction Estimator India 2026 |
+| Delhi/NCR | 1.40x | Construction Estimator India 2026 |
+| Bangalore | 1.35x | Construction Estimator India 2026 |
+| Other Metro | 1.30x | Estimated |
+| Tier-2 City | 1.15x | JK Cement 2026 |
+| Town | 1.00x | Baseline |
+| Village | 0.85x | Estimated |
+
+**Source:** 
+- https://constructionestimatorindia.com/construction-cost-per-sq-ft-in-india/
+- https://www.jkcement.com/blog/construction-budgeting/construction-cost-per-sq-ft-india-2026/
+
+### Quality-Based Cost Multipliers
+| Quality | Multiplier | Description |
+|---------|------------|-------------|
+| Basic | 0.8x | Local materials |
+| Standard | 1.0x | Quality materials |
+| Premium | 1.3x | Premium brands |
+
+**Source:** JK Cement Construction Guide 2026
+
+### Cost Breakdown (per 5000L Storage Tank)
+| Brand | Price Range (₹) | Source |
+|-------|----------------|--------|
+| Sintex | ₹8,000 - ₹12,000 | NoBroker 2025 |
+| Supreme | ₹7,500 - ₹11,500 | NoBroker 2025 |
+| Plasto | ₹7,000 - ₹10,500 | NoBroker 2025 |
+| Aqua | ₹8,500 - ₹13,000 | NoBroker 2025 |
+
+**Source:** https://www.nobroker.in/blog/5000-litre-water-tank-price-in-india/
+
+### Construction Cost Variation
+- Contractor quotes vary by: **±10-20%**
+- Annual inflation: **5-8%** (JLL 2026)
+
+**Source:** https://www.nbmcw.com/news/construction-costs-across-all-asset-classes-in-india-projected-to-increase-3-5-in-2026-jll.html
+
+---
+
+## 5. Aquifer Database
+
+**Q: How many districts are covered?**
+> 70+ districts across 25+ Indian states
+
+**Q: What data is stored per district?**
+> - State, District
+> - Aquifer Type (Alluvial, Basalt, Granite, etc.)
+> - Groundwater Level (meters)
+> - Annual Rainfall (mm)
+> - Soil Type
+> - Runoff Coefficient
+> - Water Quality Status
+
+**Q: What is the data source?**
+> CGWB (Central Ground Water Board) reports and IMD (India Meteorological Department)
+
+---
+
+## 6. Technical Questions
 
 **Q: Why H2 database instead of MySQL?**
 > H2 is an in-memory database that requires no setup. It's perfect for demos and student projects. Data resets on app restart.
@@ -103,13 +168,15 @@ CO₂ Reduction (kg/year) = Surplus Water × 0.4
 
 ---
 
-## 5. Scientific Questions
+## 7. Scientific Questions
 
 **Q: What is 135 LPCD?**
 > Liters Per Capita Per Day - The Indian standard for estimating water demand. 135 LPCD is the recommended daily water requirement per person.
 
 **Q: Why CO₂ reduction = Runoff × 0.4?**
 > Based on energy saved by not pumping groundwater. Approximately 0.35-0.4 kg of CO₂ emissions are avoided for every KL of rainwater harvested.
+> 
+> Calculation: Pumping groundwater uses ~0.5 kWh per 1000 liters. At ~0.7 kg CO₂ per kWh (grid average) = ~0.35 kg CO₂ per KL. Rounded to 0.4 for conservative estimate.
 
 **Q: What is aquifer type?**
 > The geological formation that stores groundwater. Types include:
@@ -120,25 +187,50 @@ CO₂ Reduction (kg/year) = Surplus Water × 0.4
 **Q: What is runoff coefficient?**
 > The percentage of rainfall that becomes runoff. Smooth surfaces (metal) have high coefficients (0.90), while absorbent surfaces (thatch) have low coefficients (0.30).
 
-**Q: What is percolation?**
-> The process of water filtering through soil into the ground aquifer. Recharge pits enhance percolation.
+---
+
+## 8. Data Sources (Complete List)
+
+| Data Type | Source | Year |
+|-----------|--------|------|
+| Rainfall/Aquifer Data | CGWB (Central Ground Water Board) | Various |
+| Construction Costs | JK Cement | 2026 |
+| Construction Costs | Construction Estimator India | 2026 |
+| Tank Prices | NoBroker | 2025 |
+| Cost Variation | JLL India | 2026 |
+| RWH Costs | HouseYog | 2025 |
 
 ---
 
-## 6. Data Source
+## 9. Features Explained
 
-**Q: Where does rainfall data come from?**
-> From CGWB (Central Ground Water Board) reports - historical annual rainfall averages for Indian districts.
+### Custom Cost Entry
+Users can enter their own quotes from local contractors:
+- Excavation cost
+- PCC cost
+- Stone/Gravel cost
+- Brickwork cost
+- Labour cost
+- Plumbing cost
+- Filtration cost
 
-**Q: Is the data current?**
-> The data is based on historical averages. For production use, it should be updated periodically.
+### Year-Based Cost Adjustment
+Select estimation year: 2024, 2025, or 2026
+Accounts for annual inflation (~7%)
 
-**Q: How many districts are covered?**
-> Currently 30+ districts across 18 Indian states.
+### Quality Options
+- Basic: 0.8x (local materials)
+- Standard: 1.0x (quality materials)
+- Premium: 1.3x (premium brands)
+
+### Cost Range Display
+- Minimum: 80% of calculated cost
+- Maximum: 120% of calculated cost
+- Accounts for contractor quote variations
 
 ---
 
-## 7. Limitations & Improvements
+## 10. Limitations & Improvements
 
 **Q: What are the limitations?**
 > - Static rainfall data (not live)
@@ -157,24 +249,7 @@ CO₂ Reduction (kg/year) = Surplus Water × 0.4
 
 ---
 
-## 8. Troubleshooting
-
-**Q: App won't start?**
-> - Ensure Java 17+ is installed
-> - Check port 9090 is available
-> - Run: `.\mvnw.cmd spring-boot:run`
-
-**Q: PDF not downloading?**
-> - Check browser popups are allowed
-> - Check console for errors
-> - Try refreshing the page
-
-**Q: Negative 20-year savings?**
-> This happens when surplus water is too low to cover maintenance costs. The system may still be environmentally beneficial but not financially optimal.
-
----
-
-## 9. For Presentation
+## 11. For Presentation
 
 **Q: How to run the project?**
 > ```bash
@@ -190,20 +265,22 @@ CO₂ Reduction (kg/year) = Surplus Water × 0.4
 > ```
 
 **Q: Key points to highlight?**
-> - Scientifically accurate formulas
-> - Real CGWB data
-> - PDF report feature (stands out)
-> - Location-based cost variation
-> - Environmental impact calculation
+> - Scientifically accurate formulas with proper references
+> - Real CGWB data (70+ districts)
+> - PDF report feature
+> - Multi-factor cost estimation (location + year + quality)
+> - Custom cost entry option
+> - Data sources from established Indian sources (JK Cement, NoBroker, CGWB)
 
 ---
 
-## 10. Data Flow
+## 12. Data Flow
 
 ```
 User Input → Validate → Calculate Runoff → Check Feasibility 
-    → Recommend Structure → Calculate Cost → Generate Result
-    → Save to Database → Display on Screen → PDF Download
+    → Recommend Structure → Calculate Cost (with multipliers)
+    → Generate Result → Save to Database → Display on Screen 
+    → PDF Download / Custom Cost Entry
 ```
 
 ---
@@ -221,4 +298,6 @@ User Input → Validate → Calculate Runoff → Check Feasibility
 
 ---
 
+*Last Updated: April 2026*
 *Created for JalDhara - Mini Project Reference*
+*Data Sources: JK Cement, NoBroker, CGWB, Construction Estimator India, JLL*
